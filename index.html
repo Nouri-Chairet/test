@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>boga boga</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #ffccf9, #ccf9ff);
+      height: 100vh;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .balloon {
+      position: absolute;
+      width: 100px;
+      height: 140px;
+      background: red;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      animation: float 11s linear infinite;
+    }
+
+    .string {
+      position: absolute;
+      width: 2px;
+      height: 100px;
+      background: #666;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      font-size: 1.5rem;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .message img {
+      margin-top: 10px;
+      width: 200px;
+      border-radius: 10px;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0);
+      }
+      25% {
+        transform: translate(-50vw, 10vh);
+      }
+      50% {
+        transform: translate(30vw, 20vh);
+      }
+      75% {
+        transform: translate(80vw, 30vh);
+      }
+    }
+
+    @keyframes appear {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="balloon" id="balloon">
+    Catch me!
+    <div class="string"></div>
+  </div>
+
+  <div class="message" id="message">
+    You look beautiful today 🌟 
+    ghaba
+    <img src="image.png" alt="You look beautiful">
+  </div>
+
+  <script>
+    const balloon = document.getElementById('balloon');
+    const message = document.getElementById('message');
+
+    balloon.addEventListener('click', () => {
+      balloon.style.animation = 'none';
+      message.style.opacity = 1;
+      message.style.animation = 'appear 1s forwards';
+      balloon.innerText = '';
+    });
+  </script>
+
+</body>
+</html>
