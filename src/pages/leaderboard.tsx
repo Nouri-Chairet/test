@@ -10,24 +10,23 @@ import { useNavigate } from "react-router-dom";
 import { GoArrowLeft } from "react-icons/go";
 import { motion } from "framer-motion";
 import clsx from "clsx";
-import { AxiosError } from "axios";
 
 function LeaderboardPage() {
   const [isFrozen, setIsFrozen] = useState(false);
 
   const navigate = useNavigate();
-  const { data, error, isLoading } = useQuery<Leaderboard, AxiosError>({
+  const { data, error, isLoading } = useQuery<Leaderboard>({
     enabled: !isFrozen,
     queryKey: ["leaderboard"],
-    queryFn: async () => {
-      const { data } = await Axios.get("/public-leaderboard");
-      return data;
+    queryFn: async (): Promise<Leaderboard> => {
+      const response = await Axios.get<Leaderboard>("/public-leaderboard");
+      return response.data;
     },
     refetchInterval: 5000,
   });
 
   useEffect(() => {
-    if (error?.response?.status === 400) {
+    if ((error as any)?.response?.status === 400) {
       setIsFrozen(true);
     } else {
       setIsFrozen(false);
@@ -35,7 +34,7 @@ function LeaderboardPage() {
   }, [error]);
 
   const sortedLeaderboard = React.useMemo(() => {
-    const sorted = data?.sort((a, b) => b.score - a.score);
+    const sorted = data?.sort((a: Leaderboard[number], b: Leaderboard[number]) => b.score - a.score);
     if (data && Array.isArray(data)) {
       localStorage.setItem("leaderboard", JSON.stringify(sorted));
     }
@@ -111,7 +110,7 @@ function LeaderboardPage() {
                 values={sortedLeaderboard || []}
                 onReorder={() => {}}
               >
-                {leaderboard?.map((team, index) => {
+                {leaderboard?.map((team: Leaderboard[number], index: number) => {
                   return (
                     <Reorder.Item
                       key={team?.id}

@@ -11,7 +11,6 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { Axios } from "@/helpers/axios";
-import { AxiosError } from "axios";
 
 type Props = {
   isOpen: boolean;
@@ -28,11 +27,11 @@ const SecretModal = ({
 }: Props) => {
   const [secret, setSecret] = useState("");
 
-  const secretMutation = useMutation<Challenge, AxiosError>({
+  const secretMutation = useMutation<Challenge>({
     mutationKey: ["submit-secret", challenge?.id],
-    mutationFn: async () => {
-      const res = await Axios.get(`/challenges/${challenge?.id}/${secret}`);
-      return res?.data;
+    mutationFn: async (): Promise<Challenge> => {
+      const res = await Axios.get<Challenge>(`/challenges/${challenge?.id}/${secret}`);
+      return res.data;
     },
     onSuccess: (data: Challenge) => {
       onClose();
@@ -85,14 +84,13 @@ const SecretModal = ({
                 Submit
               </Button>
             </div>
-            {secretMutation.error &&
-              secretMutation.error?.response?.status === 400 && (
-                <p className="mt-2 text-sm text-red-500">Wrong secret</p>
-              )}
-            {secretMutation.error &&
-              secretMutation.error?.response?.status !== 400 && (
-                <p className="mt-2 text-sm text-red-500">An Error Occured</p>
-              )}
+            {secretMutation.error && (
+              <p className="mt-2 text-sm text-red-500">
+                {(secretMutation.error as any)?.response?.status === 400
+                  ? "Wrong secret"
+                  : "An Error Occurred"}
+              </p>
+            )}
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

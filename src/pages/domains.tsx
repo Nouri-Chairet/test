@@ -17,7 +17,7 @@ function Domains() {
   } = useQuery<Domain[]>({
     queryKey: ["domains"],
     queryFn: async () => {
-      const { data } = await Axios.get("/domains");
+      const { data } = await Axios.get<Domain[]>("/domains");
       return data;
     },
   });
@@ -74,7 +74,7 @@ function Domains() {
             </motion.button>
           </div>
           <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-8">
-            <HoverEffect items={domains!} />
+            {domains && <HoverEffect items={domains} />}
           </div>
         </div>
       )}

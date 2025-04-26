@@ -20,8 +20,8 @@ function Challenges() {
   const { domainId } = useParams();
   const { data, isLoading, error } = useQuery<Challenge[]>({
     queryKey: ["challenges", domainId],
-    queryFn: async () => {
-      const { data } = await Axios.get(`/domains/${domainId}/challenges`);
+    queryFn: async (): Promise<Challenge[]> => {
+      const { data } = await Axios.get<Challenge[]>(`/domains/${domainId}/challenges`);
       return data;
     },
   });
@@ -32,8 +32,8 @@ function Challenges() {
     error: domainError,
   } = useQuery<Domain[]>({
     queryKey: ["domains"],
-    queryFn: async () => {
-      const { data } = await Axios.get(`/domains`);
+    queryFn: async (): Promise<Domain[]> => {
+      const { data } = await Axios.get<Domain[]>(`/domains`);
       return data;
     },
   });
@@ -46,13 +46,13 @@ function Challenges() {
 
   if (error || domainError) return <div>An Error Occured</div>;
 
-  const domain = domains?.find((d) => d?.id === Number(domainId));
+  const domain = domains?.find((d: Domain) => d.id === Number(domainId));
 
-  const challenges = data?.sort((a, b) => {
+  const challenges = data?.sort((a: Challenge, b: Challenge) => {
     if (sort === "asc") {
-      return a?.points - b?.points;
+      return a.points - b.points;
     } else {
-      return b?.points - a?.points;
+      return b.points - a.points;
     }
   });
 
